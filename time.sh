@@ -64,7 +64,7 @@ iv_lunch() {
 #Confirm the lunch is formatted correctly
 	if ! [[ "$lunch" =~ ^[0-9]+$ ]]
 		then
-			printf "${red}\n\nERROR!${reset}\n\n${red}Lunch needs to be a number${reset}\n\nCurrent input: ${red}$(echo ${lunch})${reset}\n\nExample: ${green}30${reset}\n"
+			printf "${red}\n\nERROR!${reset}\n\n${red}Lunch input needs to be a number (The input represents the number of minutes to deduct for a lunch break)${reset}\n\nCurrent input: ${red}$(echo ${lunch})${reset}\n\nExample: ${green}30${reset}\n"
 		exit 0
 	fi	
 }
