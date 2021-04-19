@@ -60,7 +60,7 @@ read -p "Enter the clock-out time (24-hour clock): " etime
                 then
                         printf "${red}\n\nERROR!${reset}\n\n${red}Start time and/or End time needs to be a number${reset}\n\nCurrent start time: ${red}$(echo ${stime})${reset}\nCurrent end time: ${red}$(echo ${etime})${reset}\n\nCorrect Format:\nStart time: ${green}14:45${reset}\nEnd time: ${green}23:30${reset}"
                 exit 0
-        fi
+	fi
 
 }
 
