@@ -18,7 +18,7 @@ iv_blank_days() {
 #no blank fields allowed
 	if [ -z "$sday" ] || [ -z "$eday" ]
         	then
-                	printf "${red}Start date and/or end date cannot be left blank, please try again."
+                	printf "${red}\n\nERROR!${reset}\n\n${red}Start date and/or end date cannot be left blank, please try again."
         	exit 0
 	fi
 }
@@ -26,7 +26,7 @@ iv_blank_days() {
 iv_blank_times() {
 	if [ -z "$stime" ] || [ -z "$etime" ]
 		then
-			printf "${red}Start time and/or end time cannot be left blank, please try again."
+			printf "${red}\n\nERROR!${reset}\n\n${red}Start time and/or end time cannot be left blank, please try again."
 		exit 0
 	fi
 
@@ -36,7 +36,7 @@ iv_blank_lunch() {
 #no blank fields allowed
         if [ -z "$lunch" ]
                 then
-                        printf "${red}Lunch cannot be left blank, please try again. If you would like to deduct zero minutes, use the number 0."
+                        printf "${red}\n\nERROR!${reset}\n\n${red}Lunch cannot be left blank, please try again. If you would like to deduct zero minutes, use the number 0."
                 exit 0
         fi
 }
@@ -45,7 +45,7 @@ iv_days() {
 #Confirm the dates are formatted properly
 	if ! [[ "$sday" =~ ^[01][0-9]-[0123][0-9]-202[0-9]$ ]] || ! [[ "$eday" =~ ^[0-9]{2}-[0-9]{2}-[0-9]{4}$ ]]
         	then
-                	printf "Starting day or Ending day is formatted incorrectly.\nCurrent format:\nStarting Day: $(echo "$sday")\nEnding Day: $(echo "$eday")\n\nCorrect format: MM-DD-YYYY\nExample: August 19th, 2021 would be - 08-19-2021\n"
+                	printf "${red}\n\nERROR!${reset}\n\n${red}Starting day or Ending day is formatted incorrectly.\n\n${reset}Current format:\nStarting Day: ${red}$(echo "$sday")${reset}\nEnding Day: ${red}$(echo "$eday")${reset}\n\nCorrect format: ${green}MM-DD-YYYY${reset}\nExample: August 19th, 2021 would be - ${green}08-19-2021\n"
         exit 0
 fi
 
@@ -55,7 +55,7 @@ iv_times() {
 #Confirm the times are formatted properly
         if ! [[ "$stime" =~ ^[0-9]{2}:[0-9]{2}$  ]] || ! [[ "$etime" =~ ^[0-9]{2}:[0-9]{2}$ ]]
                 then
-                        printf "Start time and/or End time needs to be a number\nCurrent start time:$(echo ${stime})\nCurrent end time:$(echo ${etime})\nCorrect Format:\nStart time: 14:45\nEnd time: 23:30"
+                        printf "${red}\n\nERROR!${reset}\n\n${red}Start time and/or End time needs to be a number${reset}\n\nCurrent start time: ${red}$(echo ${stime})${reset}\nCurrent end time: ${red}$(echo ${etime})${reset}\n\nCorrect Format:\nStart time: ${green}14:45${reset}\nEnd time: ${green}23:30${reset}"
                 exit 0
         fi
 }
@@ -64,7 +64,7 @@ iv_lunch() {
 #Confirm the lunch is formatted correctly
 	if ! [[ "$lunch" =~ ^[0-9]+$ ]]
 		then
-			printf "Lunch needs to be a number\nCurrent input: $(echo ${lunch})\nExample: 30\n"
+			printf "${red}\n\nERROR!${reset}\n\n${red}Lunch needs to be a number${reset}\n\nCurrent input: ${red}$(echo ${lunch})${reset}\n\nExample: ${green}30${reset}\n"
 		exit 0
 	fi	
 }
