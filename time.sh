@@ -12,22 +12,74 @@ setup_env() {
 	bold=$(tput bold)
 	uline=$(tput smul)
 
-	#reset the env to start with a clean slate
-	reset
+}
+
+iv_blank_days() {
+#no blank fields allowed
+	if [ -z "$sday" ] || [ -z "$eday" ]
+        	then
+                	printf "${red}Start date and/or end date cannot be left blank, please try again."
+        	exit 0
+	fi
+}
+
+iv_blank_times() {
+	if [ -z "$stime" ] || [ -z "$etime" ]
+		then
+			printf "${red}Start time and/or end time cannot be left blank, please try again."
+		exit 0
+	fi
+
+}
+
+iv_blank_lunch() {
+#no blank fields allowed
+        if [ -z "$lunch" ]
+                then
+                        printf "${red}Lunch cannot be left blank, please try again. If you would like to deduct zero minutes, use the number 0."
+                exit 0
+        fi
+}
+
+iv_days() {
+#Confirm the dates are formatted properly
+	if ! [[ "$sday" =~ ^[01][0-9]-[0123][0-9]-202[0-9]$ ]] || ! [[ "$eday" =~ ^[0-9]{2}-[0-9]{2}-[0-9]{4}$ ]]
+        	then
+                	printf "Starting day or Ending day is formatted incorrectly.\nCurrent format:\nStarting Day: $(echo "$sday")\nEnding Day: $(echo "$eday")\n\nCorrect format: MM-DD-YYYY\nExample: August 19th, 2021 would be - 08-19-2021\n"
+        exit 0
+fi
+
+}
+
+iv_times() {
+#Confirm the times are formatted properly
+        if ! [[ "$stime" =~ ^[0-9]{2}:[0-9]{2}$  ]] || ! [[ "$etime" =~ ^[0-9]{2}:[0-9]{2}$ ]]
+                then
+                        printf "Start time and/or End time needs to be a number\nCurrent start time:$(echo ${stime})\nCurrent end time:$(echo ${etime})\nCorrect Format:\nStart time: 14:45\nEnd time: 23:30"
+                exit 0
+        fi
+}
+
+iv_lunch() {
+#Confirm the lunch is formatted correctly
+	if ! [[ "$lunch" =~ ^[0-9]+$ ]]
+		then
+			printf "Lunch needs to be a number\nCurrent input: $(echo ${lunch})\nExample: 30\n"
+		exit 0
+	fi	
 }
 
 get_days() {
 #get the starting day
-read -p "Enter the start date (MM-DD-YYYY): " sday
+	read -p "Enter the start date (MM-DD-YYYY): " sday
 
 #get the ending day
-echo "Enter the ending date, press [Enter] if same as starting date: "
-read input
-if [[ $input == "" ]]; then
-	eday=$sday
-else
-	eday=$input
-fi
+	read -p "Enter the ending date, press [Enter] if same as starting date: " input
+		if [[ $input == "" ]]; then
+				eday=$sday
+			else
+				eday=$input
+		fi
 }
 
 get_times() {
@@ -37,32 +89,25 @@ read -p "Enter the clock-in time (24-hour clock): " stime
 
 #get the clock-out time
 read -p "Enter the clock-out time (24-hour clock): " etime
+}
 
+get_lunch() {
 #get the number of minutes for lunch
 read -p "Enter the number of minutes to deduct for lunch: " lunch
-slunch=$(awk "BEGIN {print ${lunch}*60}")
 }
 
-get_days
-get_times
+#Do all the functions
 setup_env
+get_days
+iv_blank_days
+iv_days
+get_times
+iv_blank_times
+iv_times
+get_lunch
+iv_blank_lunch
+iv_lunch
 
-validate_input() {
-#Confirm everything the user entered is in the valid format stime etime lunch sday eday
-if [ -z "$stime" ] || [ -z "$etime" ] || [ -z "$sday" ] || [ -z "$eday" ] || [ -z "$lunch" ]
-	then
-		printf "${red}Fields cannot be left blank, please try again."
-	exit 0
-fi
-
-if ! [[ "$sday" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || ! [[ "$eday" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]
-	then
-		printf "Starting day or Ending day is formatted incorrectly.\nCurrent format:\n\tStarting Day: $(echo "$sday")\n\tEnding Day: $(echo "$eday")\n\nCorrect format: MM-DD-YYYY\nExample: 08-19-2021\n"
-	exit 0
-fi
-}
-
-validate_input 
 
 epoch_convert() {
 	#Convert clock-in time to epoch
@@ -73,6 +118,9 @@ epoch_convert() {
 
 	#Difference in seconds between epoch clock-in and epoch clock-out
 	diff_time=$(expr ${epoch_etime} - ${epoch_stime})
+
+	#Convert lunch minutes to seconds
+	slunch=$(awk "BEGIN {print ${lunch}*60}")
 
 	#Deduct the number of minutes for lunch
 	total_time=$(awk "BEGIN {print ${diff_time}-${slunch}}")
