@@ -38,7 +38,7 @@ get_days() {
                 then
                         printf "${red}\n\nERROR!${reset}\n\n${red}Starting day or Ending day is formatted incorrectly.\n\n${reset}Current format:\nStarting Day: ${red}$(echo "$sday")${reset}\nEnding Day: ${red}$(echo "$eday")${reset}\n\nCorrect format: ${green}MM-DD-YYYY${reset}\nExample: August 19th, 2021 would be - ${green}08-19-2021\n"
         exit 0
-fi
+	fi
 }
 get_times() {
 #get the clock-in time
